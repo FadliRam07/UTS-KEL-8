@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# Portal Berita Internasional
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Sebuah Website portal berita internasional berbasis React yang menampilkan berita terbaru dari berbagai kategori: teknologi, bisnis, olahraga, hiburan, kesehatan, dan sains. Fitur aplikasi mencakup dark mode/light mode, multi-bahasa (Indonesia/English), login & profil pengguna, pencarian berita, kategori berita, slideshow hero, dan infinite scroll. project ini menggunakan React dan Tailwind sebagai Styling dan menggunakan Create React App 
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Demo
+Cek demo online di sini: [Demo Portal Berita](https://link-demo-kamu.com)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Cara Instalasi
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Clone repository**
+```bash
+git clone https://github.com/username/repo-portal-berita.git
+```
 
-### `npm test`
+2. **Masuk ke folder project**
+```bash
+cd repo-portal-berita
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Install dependencies**
+```bash
+npm install
+```
+atau
+```bash
+yarn install
+```
 
-### `npm run build`
+4. **Jalankan project**
+```bash
+npm start
+```
+atau
+```bash
+npm run dev 
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Project akan berjalan di `http://localhost:3000`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Fitur Utama
+- Dark mode / Light mode  
+- Multi-bahasa (Indonesia & English)  
+- Login & Profile  
+- Pencarian berita  
+- Kategori berita  
+- Slideshow hero  
+- Infinite scroll berita  
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Konfigurasi API
+1. Buat file `.env` di root project.  
+2. Masukkan API key dari [NewsAPI](https://newsapi.org):  
+```
+REACT_APP_NEWS_API_KEY=8ff4f09abcda4ce8aef76bfafe2180ec
+```
+3. Restart aplikasi setelah menambahkan `.env`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Anggota Kelompok
+- Fadli Ramadhan Alfarizki  (Pembuat Utama semua, penentu ide,)
+- M. Luthfi Haritsyah  (Penentu Tema yang akan dibuat)
+- M. Rizky Aditiya   (Penentu API yang akan dipakai)
+- Luthvi Kandias (Pembantu API yang akan dipakai(Register API))
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Lisensi
+MIT License
