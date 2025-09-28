@@ -7,7 +7,7 @@ Project ini menggunakan **React** dan **TailwindCSS** sebagai styling, serta dib
 ---
 
 ## 🚀 Demo
-Cek demo online di sini: [Demo Portal Berita](https://link-demo-kamu.com)
+Cek demo online di sini:(https://portalberitainternasional.vercel.app)
 
 ---
 
