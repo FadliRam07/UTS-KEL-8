@@ -32,12 +32,9 @@ function Home({ darkMode, setDarkMode, language }) {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  // ✅ Fetch berita via serverless function
   useEffect(() => {
-    const apiKey = process.env.REACT_APP_NEWS_API_KEY;
-
-    fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory}&apiKey=${apiKey}`
-    )
+    fetch(`/api/news?category=${selectedCategory}`)
       .then((res) => res.json())
       .then((data) => {
         setArticles(data.articles || []);
@@ -46,13 +43,16 @@ function Home({ darkMode, setDarkMode, language }) {
       .catch((err) => console.error("Error fetching news:", err));
   }, [selectedCategory]);
 
+  // Slideshow berganti otomatis
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % heroImages.length);
-    }, 3000);
+    const interval = setInterval(
+      () => setCurrentImage((prev) => (prev + 1) % heroImages.length),
+      3000
+    );
     return () => clearInterval(interval);
   }, []);
 
+  // Scroll handler untuk infinite load
   useEffect(() => {
     const handleScroll = () => {
       setShowTop(window.scrollY > 200);
@@ -70,6 +70,7 @@ function Home({ darkMode, setDarkMode, language }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLoading, visibleCount, articles.length]);
 
+  // Jam real-time
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(interval);
@@ -81,6 +82,7 @@ function Home({ darkMode, setDarkMode, language }) {
 
   const currentArticles = filteredArticles.slice(0, visibleCount);
 
+  // Simulasi progress loading
   const simulateLoading = (callback) => {
     setIsLoading(true);
     setProgress(0);
@@ -107,11 +109,13 @@ function Home({ darkMode, setDarkMode, language }) {
 
   const handleLoadMore = () => {
     simulateLoading(() => {
-      setVisibleCount((prev) => Math.min(prev + 6, filteredArticles.length));
+      setVisibleCount((prev) =>
+        Math.min(prev + 6, filteredArticles.length)
+      );
     });
   };
 
-  // Helper untuk label kategori
+  // Mapping nama kategori sesuai bahasa
   const categoryLabel = (cat) => {
     const map = {
       general: language === "id" ? "Umum" : "General",
@@ -125,7 +129,7 @@ function Home({ darkMode, setDarkMode, language }) {
     return map[cat] || cat;
   };
 
-  // Helper untuk label tombol Light/Dark sesuai bahasa
+  // Label tombol dark/light mode
   const toggleButtonLabel = () => {
     if (darkMode) {
       return language === "id" ? "☀️ Terang" : "☀️ Light";
@@ -172,7 +176,9 @@ function Home({ darkMode, setDarkMode, language }) {
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
             <input
               type="text"
-              placeholder={language === "id" ? "Cari berita..." : "Search news..."}
+              placeholder={
+                language === "id" ? "Cari berita..." : "Search news..."
+              }
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="px-4 py-2 rounded-md text-black w-full sm:w-60"
@@ -223,7 +229,9 @@ function Home({ darkMode, setDarkMode, language }) {
                 key={idx}
                 onClick={() => setCurrentImage(idx)}
                 className={`w-3 h-3 rounded-full transition ${
-                  currentImage === idx ? "bg-yellow-400" : "bg-white opacity-50"
+                  currentImage === idx
+                    ? "bg-yellow-400"
+                    : "bg-white opacity-50"
                 }`}
               ></button>
             ))}
@@ -237,14 +245,13 @@ function Home({ darkMode, setDarkMode, language }) {
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-4 sm:px-5 py-2 rounded-full font-medium shadow-md transition-all duration-300 text-sm sm:text-base
-              ${
-                selectedCategory === cat
-                  ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white scale-105"
-                  : darkMode
-                  ? "bg-gray-800 text-white hover:bg-gray-700"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
-              }`}
+            className={`px-4 sm:px-5 py-2 rounded-full font-medium shadow-md transition-all duration-300 text-sm sm:text-base ${
+              selectedCategory === cat
+                ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white scale-105"
+                : darkMode
+                ? "bg-gray-800 text-white hover:bg-gray-700"
+                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+            }`}
           >
             {categoryLabel(cat)}
           </button>
@@ -275,12 +282,16 @@ function Home({ darkMode, setDarkMode, language }) {
             darkMode ? "text-gray-300" : "text-gray-700"
           }`}
         >
-          ⏰ {time.toLocaleDateString(language === "id" ? "id-ID" : "en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}{" "}
+          ⏰{" "}
+          {time.toLocaleDateString(
+            language === "id" ? "id-ID" : "en-US",
+            {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }
+          )}{" "}
           - {time.toLocaleTimeString(language === "id" ? "id-ID" : "en-US")}
         </div>
       </motion.div>
@@ -292,7 +303,11 @@ function Home({ darkMode, setDarkMode, language }) {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         ) : (
-          <NewsList articles={currentArticles} darkMode={darkMode} language={language} />
+          <NewsList
+            articles={currentArticles}
+            darkMode={darkMode}
+            language={language}
+          />
         )}
 
         {/* Navigation Buttons */}
@@ -311,7 +326,9 @@ function Home({ darkMode, setDarkMode, language }) {
 
           <button
             onClick={handleLoadMore}
-            disabled={visibleCount >= filteredArticles.length || isLoading}
+            disabled={
+              visibleCount >= filteredArticles.length || isLoading
+            }
             className={`px-4 py-2 rounded-md shadow font-medium transition ${
               visibleCount >= filteredArticles.length || isLoading
                 ? "bg-gray-300 text-gray-600 cursor-not-allowed"
@@ -348,7 +365,9 @@ function Home({ darkMode, setDarkMode, language }) {
       {/* Back to Top */}
       {showTop && (
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() =>
+            window.scrollTo({ top: 0, behavior: "smooth" })
+          }
           className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-500 transition"
         >
           🔝
