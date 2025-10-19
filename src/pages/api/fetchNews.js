@@ -1,19 +1,12 @@
-useEffect(() => {
-  const fetchNews = async () => {
-    try {
-      setIsLoading(true);
-      const apiKey = process.env.REACT_APP_NEWS_API_KEY; // pastikan sudah ada di .env
-      const url = `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory}&apiKey=${apiKey}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      setArticles(data.articles || []);
-      setVisibleCount(6);
-    } catch (err) {
-      console.error("Error fetching news:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export default async function handler(req, res) {
+  const { category = "general" } = req.query;
+  const apiKey = process.env.REACT_APP_NEWS_API_KEY;
 
-  fetchNews();
-}, [selectedCategory]);
+  try {
+    const response = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${apiKey}`);
+    const data = await response.json();
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch news" });
+  }
+}
