@@ -33,7 +33,7 @@ function Home({ darkMode, setDarkMode, language }) {
 
   const navigate = useNavigate();
 
-  // ✅ Fetch berita dari NewsAPI
+  // Fetch berita langsung dari NewsAPI
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -50,9 +50,9 @@ function Home({ darkMode, setDarkMode, language }) {
         setIsLoading(false);
       }
     };
-
     fetchNews();
   }, [selectedCategory]);
+
 
   // Slideshow otomatis
   useEffect(() => {
