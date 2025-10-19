@@ -6,12 +6,6 @@ Project ini menggunakan **React** dan **TailwindCSS** sebagai styling, serta dib
 
 ---
 
-## 🚀 Demo
-<<<<<<< HEAD
-Cek demo online di sini: [Demo Portal Berita](https://portalberitainternasional.vercel.app)
-=======
-Cek demo online di sini:(https://portalberitainternasional.vercel.app)
->>>>>>> b3fd40e40d0f620da84bf822047332604fad15b4
 
 ---
 
