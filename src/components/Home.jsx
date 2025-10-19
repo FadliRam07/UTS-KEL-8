@@ -39,7 +39,7 @@ function Home({ darkMode, setDarkMode, language }) {
       try {
         setIsLoading(true);
         const apiKey = process.env.REACT_APP_NEWS_API_KEY;
-        const url = `/api/fetchNews?category=${selectedCategory}`;
+        const url = `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory}&apiKey=${apiKey}`;
         const res = await fetch(url);
         const data = await res.json();
         setArticles(data.articles || []);
