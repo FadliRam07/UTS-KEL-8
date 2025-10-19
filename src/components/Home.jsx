@@ -38,7 +38,7 @@ function Home({ darkMode, setDarkMode, language }) {
     const fetchNews = async () => {
       try {
         setIsLoading(true);
-        console.log("API KEY:", process.env.REACT_APP_NEWS_API_KEY);
+        const apiKey = process.env.REACT_APP_NEWS_API_KEY;
         const url = `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory}&apiKey=${apiKey}`;
         const res = await fetch(url);
         const data = await res.json();
