@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NewsList from "./NewsList";
 import FeaturesSection from "./FeaturesSection";
 import { motion } from "framer-motion";
@@ -25,25 +25,36 @@ function Home({ darkMode, setDarkMode, language }) {
   const [selectedCategory, setSelectedCategory] = useState("general");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentImage, setCurrentImage] = useState(0);
-
   const [showTop, setShowTop] = useState(false);
   const [time, setTime] = useState(new Date());
   const [visibleCount, setVisibleCount] = useState(6);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // ✅ Fetch berita via serverless function
+  const navigate = useNavigate();
+
+  // ✅ Fetch berita dari NewsAPI
   useEffect(() => {
-    fetch(`/api/news?category=${selectedCategory}`)
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchNews = async () => {
+      try {
+        setIsLoading(true);
+        const apiKey = process.env.REACT_APP_NEWS_API_KEY;
+        const url = `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory}&apiKey=${apiKey}`;
+        const res = await fetch(url);
+        const data = await res.json();
         setArticles(data.articles || []);
         setVisibleCount(6);
-      })
-      .catch((err) => console.error("Error fetching news:", err));
+      } catch (err) {
+        console.error("Error fetching news:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNews();
   }, [selectedCategory]);
 
-  // Slideshow berganti otomatis
+  // Slideshow otomatis
   useEffect(() => {
     const interval = setInterval(
       () => setCurrentImage((prev) => (prev + 1) % heroImages.length),
@@ -52,7 +63,7 @@ function Home({ darkMode, setDarkMode, language }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Scroll handler untuk infinite load
+  // Scroll handler (infinite scroll + tombol Top)
   useEffect(() => {
     const handleScroll = () => {
       setShowTop(window.scrollY > 200);
@@ -76,18 +87,17 @@ function Home({ darkMode, setDarkMode, language }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Filter berdasarkan pencarian
   const filteredArticles = articles.filter((article) =>
-    article.title.toLowerCase().includes(searchQuery.toLowerCase())
+    article.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
   const currentArticles = filteredArticles.slice(0, visibleCount);
 
-  // Simulasi progress loading
+  // Simulasi loading bar
   const simulateLoading = (callback) => {
     setIsLoading(true);
     setProgress(0);
     let width = 0;
-
     const loadingInterval = setInterval(() => {
       width += 25;
       if (width >= 100) {
@@ -115,7 +125,18 @@ function Home({ darkMode, setDarkMode, language }) {
     });
   };
 
-  // Mapping nama kategori sesuai bahasa
+  // ✅ Klik berita → kirim ke NewsDetail dengan daftar berita lainnya
+  const handleReadMore = (article, index) => {
+    // Pastikan tidak undefined
+    if (!article || !articles.length) return;
+
+    const otherArticles = articles.filter((_, i) => i !== index);
+    navigate(`/news/${index}`, {
+      state: { article, otherArticles },
+    });
+  };
+
+  // Label kategori
   const categoryLabel = (cat) => {
     const map = {
       general: language === "id" ? "Umum" : "General",
@@ -129,18 +150,19 @@ function Home({ darkMode, setDarkMode, language }) {
     return map[cat] || cat;
   };
 
-  // Label tombol dark/light mode
-  const toggleButtonLabel = () => {
-    if (darkMode) {
-      return language === "id" ? "☀️ Terang" : "☀️ Light";
-    } else {
-      return language === "id" ? "🌙 Gelap" : "🌙 Dark";
-    }
-  };
+  // Label Dark/Light Mode
+  const toggleButtonLabel = () =>
+    darkMode
+      ? language === "id"
+        ? "☀️ Terang"
+        : "☀️ Light"
+      : language === "id"
+      ? "🌙 Gelap"
+      : "🌙 Dark";
 
   return (
     <>
-      {/* Progress Bar */}
+      {/* 🔵 Progress Bar */}
       {isLoading && (
         <div className="fixed top-0 left-0 w-full h-1 bg-gray-300 z-50">
           <div
@@ -150,7 +172,7 @@ function Home({ darkMode, setDarkMode, language }) {
         </div>
       )}
 
-      {/* Hero Section */}
+      {/* 🌈 Hero Section */}
       <section
         className={`w-full px-6 md:px-12 py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center overflow-hidden ${
           darkMode
@@ -158,8 +180,9 @@ function Home({ darkMode, setDarkMode, language }) {
             : "bg-gradient-to-r from-blue-500 via-cyan-400 to-green-400 text-white"
         }`}
       >
+        {/* Text kiri */}
         <div className="text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-snug">
+          <h1 className="text-4xl lg:text-5xl font-extrabold leading-snug">
             {language === "id" ? "Selamat Datang di" : "Welcome to"} <br />
             <span className="text-yellow-300">
               {language === "id"
@@ -167,10 +190,10 @@ function Home({ darkMode, setDarkMode, language }) {
                 : "International News Portal"}
             </span>
           </h1>
-          <p className="mt-4 text-base sm:text-lg md:text-xl">
+          <p className="mt-4 text-lg">
             {language === "id"
-              ? "Dapatkan berita terbaru seputar dunia, teknologi, olahraga, bisnis, kesehatan, hiburan, dan masih banyak lagi."
-              : "Get the latest news on world, technology, sports, business, health, entertainment, and more."}
+              ? "Dapatkan berita terbaru seputar dunia, teknologi, olahraga, bisnis, kesehatan, hiburan, dan banyak lagi."
+              : "Get the latest updates on world, technology, sports, business, health, entertainment, and more."}
           </p>
 
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
@@ -205,9 +228,9 @@ function Home({ darkMode, setDarkMode, language }) {
           </div>
         </div>
 
-        {/* Slideshow */}
+        {/* Slideshow kanan */}
         <div className="relative flex justify-center md:justify-end">
-          <div className="w-60 sm:w-72 md:w-80 lg:w-96 h-60 sm:h-72 md:h-80 lg:h-96 overflow-hidden rounded-xl shadow-lg">
+          <div className="w-72 md:w-80 lg:w-96 h-72 md:h-80 lg:h-96 overflow-hidden rounded-xl shadow-lg">
             <div
               className="flex transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${currentImage * 100}%)` }}
@@ -222,7 +245,6 @@ function Home({ darkMode, setDarkMode, language }) {
               ))}
             </div>
           </div>
-
           <div className="absolute bottom-3 flex gap-2">
             {heroImages.map((_, idx) => (
               <button
@@ -239,7 +261,7 @@ function Home({ darkMode, setDarkMode, language }) {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* 🏷️ Kategori */}
       <div className="px-4 md:px-8 py-6 flex flex-wrap gap-3 justify-center">
         {categories.map((cat) => (
           <button
@@ -258,7 +280,7 @@ function Home({ darkMode, setDarkMode, language }) {
         ))}
       </div>
 
-      {/* News Today */}
+      {/* 📰 Daftar Berita */}
       <motion.div
         className="text-center my-10"
         initial={{ opacity: 0, y: 40 }}
@@ -267,7 +289,7 @@ function Home({ darkMode, setDarkMode, language }) {
         viewport={{ once: true }}
       >
         <h2
-          className={`font-extrabold text-3xl sm:text-4xl md:text-5xl bg-clip-text text-transparent ${
+          className={`font-extrabold text-4xl bg-clip-text text-transparent ${
             darkMode
               ? "bg-gradient-to-r from-yellow-300 via-pink-400 to-purple-500"
               : "bg-gradient-to-r from-blue-600 via-green-500 to-cyan-400"
@@ -283,15 +305,12 @@ function Home({ darkMode, setDarkMode, language }) {
           }`}
         >
           ⏰{" "}
-          {time.toLocaleDateString(
-            language === "id" ? "id-ID" : "en-US",
-            {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }
-          )}{" "}
+          {time.toLocaleDateString(language === "id" ? "id-ID" : "en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}{" "}
           - {time.toLocaleTimeString(language === "id" ? "id-ID" : "en-US")}
         </div>
       </motion.div>
@@ -307,10 +326,11 @@ function Home({ darkMode, setDarkMode, language }) {
             articles={currentArticles}
             darkMode={darkMode}
             language={language}
+            onReadMore={handleReadMore} // ✅ kirim artikel ke NewsDetail
           />
         )}
 
-        {/* Navigation Buttons */}
+        {/* Navigasi Berita */}
         <div className="flex justify-center gap-4 mt-6">
           <button
             onClick={handlePrev}
@@ -326,9 +346,7 @@ function Home({ darkMode, setDarkMode, language }) {
 
           <button
             onClick={handleLoadMore}
-            disabled={
-              visibleCount >= filteredArticles.length || isLoading
-            }
+            disabled={visibleCount >= filteredArticles.length || isLoading}
             className={`px-4 py-2 rounded-md shadow font-medium transition ${
               visibleCount >= filteredArticles.length || isLoading
                 ? "bg-gray-300 text-gray-600 cursor-not-allowed"
@@ -346,10 +364,9 @@ function Home({ darkMode, setDarkMode, language }) {
         </div>
       </div>
 
-      {/* Features */}
       <FeaturesSection darkMode={darkMode} language={language} />
 
-      {/* Testimonial */}
+      {/* Terima kasih */}
       <div
         className={`mt-12 py-10 px-6 text-center rounded-xl max-w-3xl mx-auto shadow-lg ${
           darkMode ? "bg-gray-800 text-gray-200" : "bg-gray-100 text-gray-800"
@@ -362,12 +379,9 @@ function Home({ darkMode, setDarkMode, language }) {
         </p>
       </div>
 
-      {/* Back to Top */}
       {showTop && (
         <button
-          onClick={() =>
-            window.scrollTo({ top: 0, behavior: "smooth" })
-          }
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-500 transition"
         >
           🔝

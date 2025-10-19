@@ -1,7 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-function NewsList({ articles, darkMode, language }) {
+function NewsList({ articles, darkMode, language, onReadMore }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 py-4">
       {articles.map((article, index) => (
@@ -37,21 +36,23 @@ function NewsList({ articles, darkMode, language }) {
                 darkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              {article.description || (language === "id" ? "Tidak ada deskripsi." : "No description available.")}
+              {article.description ||
+                (language === "id"
+                  ? "Tidak ada deskripsi."
+                  : "No description available.")}
             </p>
 
-            {/* Tombol */}
-            <Link
-              to={`/news/${index}`}
-              state={{ article }}
-              className={`mt-4 inline-block px-4 py-2 rounded-lg text-sm text-center transition ${
+            {/* Tombol Baca Selengkapnya */}
+            <button
+              onClick={() => onReadMore(article, index)} // ✅ gunakan fungsi dari Home.js
+              className={`mt-4 px-4 py-2 rounded-lg text-sm text-center transition ${
                 darkMode
                   ? "bg-blue-500 hover:bg-blue-600 text-white"
                   : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}
             >
               {language === "id" ? "Baca Selengkapnya →" : "Read More →"}
-            </Link>
+            </button>
           </div>
         </div>
       ))}

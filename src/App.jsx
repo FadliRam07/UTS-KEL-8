@@ -15,22 +15,53 @@ function App() {
   const [language, setLanguage] = useState("id");
   const [user, setUser] = useState(null);
 
+  // 🔹 Ambil data user & preferensi dari localStorage saat pertama kali load
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
+    const savedDark = localStorage.getItem("darkMode");
+    const savedLang = localStorage.getItem("language");
+
     if (savedUser) setUser(JSON.parse(savedUser));
+    if (savedDark) setDarkMode(savedDark === "true");
+    if (savedLang) setLanguage(savedLang);
   }, []);
 
+  // 🔹 Simpan preferensi ke localStorage saat berubah
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode);
+    localStorage.setItem("language", language);
+  }, [darkMode, language]);
+
+  // 🔹 Simpan user ke localStorage setiap kali berubah
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
+  // 🔹 Logout hanya menghapus user dari state
   const handleLogout = () => {
-    localStorage.removeItem("user");
     setUser(null);
   };
 
-  if (!user)
-    return <Login setUser={setUser} darkMode={darkMode} language={language} />;
+  // 🔹 Jika belum login → tampilkan halaman login
+  if (!user) {
+    return (
+      <div
+        className={`min-h-screen flex flex-col justify-center items-center transition-colors duration-300 ${
+          darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+        }`}
+      >
+        <Login setUser={setUser} darkMode={darkMode} language={language} />
+        <Footer darkMode={darkMode} language={language} />
+      </div>
+    );
+  }
 
+  // 🔹 Jika sudah login → tampilkan seluruh aplikasi
   return (
     <div
-      className={`min-h-screen flex flex-col ${
+      className={`min-h-screen flex flex-col transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
@@ -45,6 +76,7 @@ function App() {
 
       <main className="flex-1">
         <Routes>
+          {/* ✅ setDarkMode sudah dikirim ke Home */}
           <Route
             path="/"
             element={
@@ -75,6 +107,7 @@ function App() {
                 setUser={setUser}
                 darkMode={darkMode}
                 language={language}
+                onLogout={handleLogout}
               />
             }
           />

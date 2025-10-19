@@ -30,8 +30,8 @@ function About({ darkMode, language }) {
       : "This application is developed using React.js and TailwindCSS with integration of international news API (NewsApi).",
     aboutCreatorTitle: language === "id" ? "Tentang Pembuatan" : "About Development",
     aboutCreator: language === "id"
-      ? "Aplikasi ini dikembangkan Oleh Fadli Ramadhan dan Anggota Kelompok 8 dengan penggunaan API(NewsApi) yang dikerjakan pada awal tanggal 22 September 2025."
-      : "This application was developed by Fadli Ramadhan and Group 8 members using NewsApi starting on September 22, 2025.",
+      ? "Aplikasi ini dikembangkan oleh Kelompok 8 dengan penggunaan API(NewsApi) yang dikerjakan pada awal tanggal 22 September 2025."
+      : "This application was developed by Group 8 members using NewsApi starting on September 22, 2025.",
     footer: language === "id" ? "Dibuat Oleh Kelompok 8" : "Created by Group 8",
     backButton: language === "id" ? "⬅ Kembali ke Beranda" : "⬅ Back to Home"
   };

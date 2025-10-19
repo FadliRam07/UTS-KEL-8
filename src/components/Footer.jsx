@@ -50,9 +50,9 @@ function Footer({ darkMode, language }) {
           <h3 className="text-lg font-semibold mb-3">
             {language === "id" ? "Hubungi Kami" : "Contact Us"}
           </h3>
-          <p className="mb-1">📍 Jl. Gedebage Selatan, Bandung</p>
+          <p className="mb-1">📍 Jl. Bandung, Jawa Barat, Indonesia</p>
           <p className="mb-1">📞 +62 822-9503-5203</p>
-          <p>✉️ info@portalberitainternasional.com</p>
+          <p>✉️ info@portalberitainternasional.vercel.app</p>
         </div>
       </div>
 
