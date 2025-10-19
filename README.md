@@ -40,10 +40,4 @@ Fitur Utama
 Konfigurasi API
 REACT_APP_NEWS_API_KEY=8ff4f09abcda4ce8aef76bfafe2180ec
 
-Anggota Kelompok
-
-Fadli Ramadhan Alfarizki (Pembuat Utama, penentu ide)
-M. Luthfi Haritsyah (Penentu Tema)
-M. Rizky Aditiya (Penentu API)
-Luthvi Kandias (Pembantu API / Register API)
 
